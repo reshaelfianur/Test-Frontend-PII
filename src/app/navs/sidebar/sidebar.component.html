@@ -1,0 +1,86 @@
+<nav class="sidebar sidebar-offcanvas" id="sidebar">
+  <ul class="nav">
+    <ng-container>
+      <li class="nav-item" [ngClass]="{ 'active': dashboard.isActive }">
+        <a class="nav-link" routerLink="/dashboard" routerLinkActive #dashboard="routerLinkActive">
+          <span class="menu-title">Dashboard</span>
+          <i class="mdi mdi-home menu-icon"></i>
+        </a>
+      </li>
+      <li class="nav-item" *ngIf="isAdmin || accessRights.role.id == 1 || accessModules[1]">
+        <a class="nav-link" (click)="userManagement = !userManagement" [attr.aria-expanded]="userManagement"
+          aria-controls="userManagement">
+          <span class="menu-title">User Management</span>
+          <i class="menu-arrow"></i>
+          <i class="mdi mdi-account-multiple"></i>
+        </a>
+        <div class="collapse" id="userManagement" [ngbCollapse]="!userManagement">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item" *ngIf="isAdmin || accessRights.role.id == 1 || accessModules[1]"> <a class="nav-link"
+                routerLink="/user-management/user" routerLinkActive="active">Users</a></li>
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item" *ngIf="isAdmin || accessRights.role.id == 1 || accessModules[2]">
+        <a class="nav-link" (click)="employee = !employee" [attr.aria-expanded]="employee" aria-controls="employee">
+          <span class="menu-title">Employee</span>
+          <i class="menu-arrow"></i>
+          <i class="mdi mdi-note-text"></i>
+        </a>
+        <div class="collapse" id="employee" [ngbCollapse]="!employee">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item" *ngIf="isAdmin || accessRights.role.id == 1 || accessSubModules[2]"> <a
+                class="nav-link" routerLink="/employee/list" routerLinkActive="active">Employee List</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item" *ngIf="isAdmin || accessRights.role.id == 1 || accessModules[4]">
+        <a class="nav-link" (click)="workMeeting = !workMeeting" [attr.aria-expanded]="workMeeting"
+          aria-controls="workMeeting">
+          <span class="menu-title">Work Meeting</span>
+          <i class="menu-arrow"></i>
+          <i class="mdi mdi-note-text"></i>
+        </a>
+        <div class="collapse" id="workMeeting" [ngbCollapse]="!workMeeting">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item" *ngIf="isAdmin || accessRights.role.id == 1 || accessSubModules[5]"> <a
+                class="nav-link" routerLink="/work-meeting/list" routerLinkActive="active">Work Meeting List</a>
+            </li>
+          </ul>
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item" *ngIf="isAdmin || accessRights.role.id == 1 || accessSubModules[6]"> <a
+                class="nav-link" routerLink="/work-meeting/participant" routerLinkActive="active">Work
+                Meeting Participant</a>
+            </li>
+          </ul>
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item" *ngIf="isAdmin || accessRights.role.id == 1 || accessSubModules[7]"> <a
+                class="nav-link" routerLink="/work-meeting/minutes-of-meeting" routerLinkActive="active">Minutes Of
+                Meeting</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <li class="nav-item" *ngIf="isAdmin || accessRights.role.id == 1 || accessModules[3]">
+        <a class="nav-link" (click)="reference = !reference" [attr.aria-expanded]="reference" aria-controls="reference">
+          <span class="menu-title">Reference</span>
+          <i class="menu-arrow"></i>
+          <i class="mdi mdi-note-text"></i>
+        </a>
+        <div class="collapse" id="reference" [ngbCollapse]="!reference">
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item" *ngIf="isAdmin || accessRights.role.id == 1 || accessSubModules[3]"> <a
+                class="nav-link" routerLink="/reference/room" routerLinkActive="active">Room</a>
+            </li>
+          </ul>
+          <ul class="nav flex-column sub-menu">
+            <li class="nav-item" *ngIf="isAdmin || accessRights.role.id == 1 || accessSubModules[4]"> <a
+                class="nav-link" routerLink="/reference/facility" routerLinkActive="active">Facility</a>
+            </li>
+          </ul>
+        </div>
+      </li>
+    </ng-container>
+  </ul>
+</nav>

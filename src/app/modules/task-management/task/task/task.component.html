@@ -1,0 +1,333 @@
+<div class="page-header">
+    <h3 class="page-title">
+        {{ title }}
+    </h3>
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">{{ module }}</li>
+            <li aria-current="page" class="breadcrumb-item active">{{ title }}</li>
+        </ol>
+    </nav>
+</div>
+
+<ngx-spinner></ngx-spinner>
+
+<div class="row" *ngIf="!isLockUser">
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <span>
+                    <span class="float-lg-right">
+                        <a class="btn btn-gradient-primary btn-rounded btn-sm" (click)="onAdd(addForm)"
+                            *ngIf="accessRights.role.id == 1 || permission.type == 1">Add New</a>
+                    </span>
+                    <h4 class="card-title" *ngIf="contents?.length">Data</h4>
+                    <h4 class="card-title text-danger" *ngIf="!isStillLoading && contents?.length == 0">No Data Exists
+                    </h4>
+                    <h4 class="card-title" *ngIf="isStillLoading">Loading... <img
+                            src="https://i.pinimg.com/originals/5f/e0/e5/5fe0e55f8e19bc4cc3201876dce7b224.gif"
+                            height="14px"></h4>
+                </span>
+                <div class="table-responsive pt-3" *ngIf="contents?.length">
+                    <table class="table table-hover" datatable [dtOptions]="dtOptions">
+                        <thead>
+                            <tr>
+                                <th scope="col">Task Title</th>
+                                <th scope="col">Task Description</th>
+                                <th scope="col">Task Assigned</th>
+                                <th scope="col">Task Status</th>
+                                <th scope="col">Task Hour</th>
+                                <th scope="col">Task Planned Start Date</th>
+                                <th scope="col">Task Planned End Date</th>
+                                <th scope="col">Task Actual Start Date</th>
+                                <th scope="col">Task Actual End Date</th>
+                            </tr>
+                        </thead>
+                        <tbody *ngIf="!isStillLoading">
+                            <ng-container *ngFor="let row of contents">
+                                <tr (click)="onEdit(editForm, row.task_id)">
+                                    <td>{{row.task_title}}</td>
+                                    <td>{{row.task_description | slice:0:25}}...</td>
+                                    <td>{{row.user_full_name}}</td>
+                                    <td>
+                                        <ng-container *ngIf="row.task_status == 1; else taskStatus2">
+                                            Active
+                                        </ng-container>
+                                        <ng-template #taskStatus2>
+                                            Inactive
+                                        </ng-template>
+                                    </td>
+                                    <td class="text-right">{{row.task_hours | number}}</td>
+                                    <td>{{row.task_planned_start_date | date: 'dd MMMM yyyy'}}</td>
+                                    <td>{{row.task_planned_end_date | date: 'dd MMMM yyyy'}}</td>
+                                    <td>{{row.task_actual_start_date | date: 'dd MMMM yyyy'}}</td>
+                                    <td>{{row.task_actual_end_date | date: 'dd MMMM yyyy'}}</td>
+                                </tr>
+                            </ng-container>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #addForm let-modal>
+    <div class="modal-header">
+        <h5 class="modal-title">Add {{ title }}</h5>
+        <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form [formGroup]="addFormGroup" (ngSubmit)="onSaveAdd()">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Tasks</h4>
+                    <div class="form-group">
+                        <label class="title-field" for="task_title">Task Title</label>
+                        <div class="input-group">
+                            <input id="task_title" class="form-control" formControlName="task_title">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="title-field" for="task_description">Task Description</label>
+                        <div class="input-group">
+                            <input id="task_description" class="form-control" formControlName="task_description">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="title-field" for="user_id">Task Assigned</label>
+                        <div class="input-group">
+                            <select class="form-control" id="user_id" formControlName="user_id">
+                                <option *ngFor="let item of users" value="{{item.user_id}}">
+                                    {{item.user_full_name}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="title-field" for="task_status">Task Status</label>
+                        <div class="input-group">
+                            <select class="form-control" id="task_status" formControlName="task_status">
+                                <option value="1">Active</option>
+                                <option value="2">Inactive</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="title-field" for="task_hours">Task Hours</label>
+                        <div class="input-group">
+                            <input id="task_hours" class="form-control text-right" formControlName="task_hours">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="title-field" for="task_planned_start_date">Task Planned Start Date</label>
+                        <div class="input-group">
+                            <input id="task_planned_start_date" type="date" class="form-control"
+                                formControlName="task_planned_start_date">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="title-field" for="task_planned_end_date">Task Planned End Date</label>
+                        <div class="input-group">
+                            <input id="task_planned_end_date" type="date" class="form-control"
+                                formControlName="task_planned_end_date">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="title-field" for="task_actual_start_date">Task Actual Start Date</label>
+                        <div class="input-group">
+                            <input id="task_actual_start_date" type="date" class="form-control"
+                                formControlName="task_actual_start_date">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="title-field" for="task_actual_end_date">Task Actual End Date</label>
+                        <div class="input-group">
+                            <input type="date" class="form-control" formControlName="task_actual_end_date">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="task_notes">Notes</label>
+                        <textarea rows="6" id="task_notes" placeholder="Notes" class="form-control"
+                            formControlName="task_notes"></textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </form>
+    </div>
+</ng-template>
+
+<ng-template #editForm let-modal>
+    <ng-container *ngIf="viewMode == 'view'">
+        <div class="modal-header">
+            <h5 class="modal-title">View {{ title }}</h5>
+            <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="editFormGroup" (ngSubmit)="onSaveEdit()">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Tasks</h4>
+                        <div class="form-group">
+                            <label class="title-field">Task Title</label>
+                            <p class="form-control-static">{{viewContent.task_description}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field">Task Description</label>
+                            <p class="form-control-static">{{viewContent.user_full_name}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field">Task Asigned</label>
+                            <p class="form-control-static">{{viewContent.user_full_name}}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field">Task Status</label>
+                            <ng-container *ngIf="viewContent.task_status == 1; else taskStatus2">
+                                <p class="form-control-static">Active</p>
+                            </ng-container>
+                            <ng-template #taskStatus2>
+                                <p class="form-control-static">Inactive</p>
+                            </ng-template>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field">Task Hours</label>
+                            <p class="form-control-static">{{viewContent.task_hours | number }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field">Task Planned Start Date</label>
+                            <p class="form-control-static">{{viewContent.task_planned_start_date | date: 'dd MMMM yyyy'
+                                }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field">Task Planned End Date</label>
+                            <p class="form-control-static">{{viewContent.task_planned_end_date | date: 'dd MMMM yyyy'}}
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field">Task Actual Start Date</label>
+                            <p class="form-control-static">{{viewContent.task_actual_start_date | date: 'dd MMMM yyyy'
+                                }}</p>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field">Task Actual End Date</label>
+                            <p class="form-control-static">{{viewContent.task_actual_end_date | date: 'dd MMMM yyyy'}}
+                            </p>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field">Task Notes</label>
+                            <p class="form-control-static">{{viewContent.task_notes}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" formControlName="task_id">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
+                    <button type="button" class="btn btn-primary" (click)="viewMode = 'edit'"
+                        *ngIf="accessRights.role.id == 1 || permission.type == 1">Edit</button>
+                    <button type="button" class="btn btn-danger" (click)="onDelete(viewContent.task_id)"
+                        *ngIf="accessRights.role.id == 1 || permission.type == 1">Delete</button>
+                </div>
+            </form>
+        </div>
+    </ng-container>
+    <ng-container *ngIf="viewMode == 'edit'">
+        <div class="modal-header">
+            <h5 class="modal-title">Edit {{ title }}</h5>
+            <button type="button" class="close" (click)="modal.dismiss()" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form [formGroup]="editFormGroup" (ngSubmit)="onSaveEdit()">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Tasks</h4>
+                        <div class="form-group">
+                            <label class="title-field" for="task_title">Task Title</label>
+                            <div class="input-group">
+                                <input id="task_title" class="form-control" formControlName="task_title">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field" for="task_description">Task Description</label>
+                            <div class="input-group">
+                                <input id="task_description" class="form-control" formControlName="task_description">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field" for="user_id">Task Assigned</label>
+                            <div class="input-group">
+                                <select class="form-control" id="user_id" formControlName="user_id">
+                                    <option *ngFor="let item of users" value="{{item.user_id}}">
+                                        {{item.user_full_name}}</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="title-field" for="task_status">Task Status</label>
+                            <div class="input-group">
+                                <select class="form-control" id="task_status" formControlName="task_status">
+                                    <option value="1">Active</option>
+                                    <option value="2">Inactive</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field" for="task_hours">Task Hours</label>
+                            <div class="input-group">
+                                <input id="task_hours" class="form-control text-right" formControlName="task_hours">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field" for="task_planned_start_date">Task Planned Start Date</label>
+                            <div class="input-group">
+                                <input id="task_planned_start_date" type="date" class="form-control"
+                                    formControlName="task_planned_start_date">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field" for="task_planned_end_date">Task Planned End Date</label>
+                            <div class="input-group">
+                                <input id="task_planned_end_date" type="date" class="form-control"
+                                    formControlName="task_planned_end_date">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field" for="task_actual_start_date">Task Actual Start Date</label>
+                            <div class="input-group">
+                                <input id="task_actual_start_date" type="date" class="form-control"
+                                    formControlName="task_actual_start_date">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="title-field" for="task_actual_end_date">Task Actual End Date</label>
+                            <div class="input-group">
+                                <input type="date" class="form-control" formControlName="task_actual_end_date">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="task_notes">Notes</label>
+                            <textarea rows="6" id="task_notes" placeholder="Notes" class="form-control"
+                                formControlName="task_notes"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" formControlName="task_id">
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" (click)="modal.dismiss()">Close</button>
+                    <button type="button" class="btn btn-secondary" (click)="onBack('view')">View</button>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </ng-container>
+</ng-template>
