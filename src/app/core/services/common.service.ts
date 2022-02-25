@@ -79,18 +79,15 @@ export class CommonService {
 			request.subscribe((respond: any) => {
 				this.spinner.hide();
 
-				if (!respond.status) {
-					this.checkAutoLogout(respond);
-				} else {
-					this.regenerateAuth(respond);
-					this.extractData(respond);
-				}
+				this.regenerateAuth(respond);
+				this.extractData(respond);
 
 				observer.next(respond);
 				observer.complete();
 
 				return (observer).unsubscribe();
-			});
+			},
+				(err) => { this.checkAutoSignOut(err) });
 		});
 	}
 
@@ -108,18 +105,15 @@ export class CommonService {
 			request.subscribe((respond: any) => {
 				this.spinner.hide();
 
-				if (!respond.status) {
-					this.checkAutoLogout(respond);
-				} else {
-					this.regenerateAuth(respond);
-					this.extractData(respond);
-				}
+				this.regenerateAuth(respond);
+				this.extractData(respond);
 
 				observer.next(respond);
 				observer.complete();
 
 				return (observer).unsubscribe();
-			});
+			},
+				(err) => { this.checkAutoSignOut(err) });
 		});
 	}
 
@@ -135,18 +129,15 @@ export class CommonService {
 			this.http.post(url, encodedData, { headers: this.sessionService.postHeader() }).subscribe((respond: any) => {
 				this.spinner.hide();
 
-				if (!respond.status) {
-					this.checkAutoLogout(respond);
-				} else {
-					this.regenerateAuth(respond);
-					this.extractData(respond);
-				}
+				this.regenerateAuth(respond);
+				this.extractData(respond);
 
 				observer.next(respond);
 				observer.complete();
 
 				return (observer).unsubscribe();
-			});
+			},
+				(err) => { this.checkAutoSignOut(err) });
 		});
 	}
 
@@ -160,18 +151,15 @@ export class CommonService {
 			this.http.post(url, this.getFormUrlEncoded(data), { headers: this.sessionService.postHeader() }).subscribe((respond: any) => {
 				this.spinner.hide();
 
-				if (!respond.status) {
-					this.checkAutoLogout(respond);
-				} else {
-					this.regenerateAuth(respond);
-					this.extractData(respond);
-				}
+				this.regenerateAuth(respond);
+				this.extractData(respond);
 
 				observer.next(respond);
 				observer.complete();
 
 				return (observer).unsubscribe();
-			});
+			},
+				(err) => { this.checkAutoSignOut(err) });
 		});
 	}
 
@@ -185,18 +173,15 @@ export class CommonService {
 			this.http.put(url, this.getFormUrlEncoded(data), { headers: this.sessionService.postHeader() }).subscribe((respond: any) => {
 				this.spinner.hide();
 
-				if (!respond.status) {
-					this.checkAutoLogout(respond);
-				} else {
-					this.regenerateAuth(respond);
-					this.extractData(respond);
-				}
+				this.regenerateAuth(respond);
+				this.extractData(respond);
 
 				observer.next(respond);
 				observer.complete();
 
 				return (observer).unsubscribe();
-			});
+			},
+				(err) => { this.checkAutoSignOut(err) });
 		});
 	}
 
@@ -210,18 +195,15 @@ export class CommonService {
 			this.http.put(url, this.getFormUrlEncoded(data), { headers: this.sessionService.postHeader() }).subscribe((respond: any) => {
 				this.spinner.hide();
 
-				if (!respond.status) {
-					this.checkAutoLogout(respond);
-				} else {
-					this.regenerateAuth(respond);
-					this.extractData(respond);
-				}
+				this.regenerateAuth(respond);
+				this.extractData(respond);
 
 				observer.next(respond);
 				observer.complete();
 
 				return (observer).unsubscribe();
-			});
+			},
+				(err) => { this.checkAutoSignOut(err) });
 		});
 	}
 
@@ -236,7 +218,7 @@ export class CommonService {
 				this.spinner.hide();
 
 				if (!respond.status) {
-					this.checkAutoLogout(respond);
+					this.checkAutoSignOut(respond);
 
 					observer.next(respond);
 					observer.complete();
@@ -250,7 +232,8 @@ export class CommonService {
 				observer.complete();
 
 				return (observer).unsubscribe();
-			});
+			},
+				(err) => { this.checkAutoSignOut(err) });
 		});
 	}
 
@@ -264,18 +247,15 @@ export class CommonService {
 			this.http.post(url, data, { headers: this.sessionService.uploadHeader() }).subscribe((respond: any) => {
 				this.spinner.hide();
 
-				if (!respond.status) {
-					this.checkAutoLogout(respond);
-				} else {
-					this.regenerateAuth(respond);
-					this.extractData(respond);
-				}
+				this.regenerateAuth(respond);
+				this.extractData(respond);
 
 				observer.next(respond);
 				observer.complete();
 
 				return (observer).unsubscribe();
-			});
+			},
+				(err) => { this.checkAutoSignOut(err) });
 		});
 	}
 
@@ -297,23 +277,21 @@ export class CommonService {
 			request.subscribe((respond: any) => {
 				this.spinner.hide();
 
-				if (!respond.status) {
-					this.checkAutoLogout(respond);
-				} else {
-					this.regenerateAuth(respond);
-					this.extractData(respond);
-				}
+				this.regenerateAuth(respond);
+				this.extractData(respond);
 
 				observer.next(respond);
 				observer.complete();
 
 				return (observer).unsubscribe();
-			});
+			},
+				(err) => { this.checkAutoSignOut(err) });
 		});
 	}
 
-	public checkAutoLogout(respond: any) {
-		if (respond.logout) {
+	public checkAutoSignOut(respond: any) {
+		
+		if (respond.status == 401) {
 			const url = `${this.sessionService.server}/auth/sign-out`;
 
 			this.http.post(url, {}, { headers: this.sessionService.postHeader() }).subscribe((respond: any) => {

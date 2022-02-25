@@ -7,9 +7,9 @@ import { AuthService } from './auth.service';
 @Injectable({
   providedIn: 'root'
 })
-export class AutoLogoutService {
+export class AutoSignOutService {
 
-  public minuteUntilAutoLogout: number = 30 // in mins
+  public minuteUntilAutoSignOut: number = 30 // in mins
   public checkInterval: number = 10000 // in ms
   public storeKey: string = '__lastAction';
 
@@ -54,7 +54,7 @@ export class AutoLogoutService {
 
   check() {
     const now = Date.now();
-    const timeleft = this.getLastAction() + (this.minuteUntilAutoLogout * 60 * 1000);
+    const timeleft = this.getLastAction() + (this.minuteUntilAutoSignOut * 60 * 1000);
     const diff = timeleft - now;
     const isTimeout = diff < 0;
 

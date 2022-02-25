@@ -213,7 +213,6 @@ export class SessionService {
 		}
 
 		return new HttpHeaders({
-			'Authorization': 'Bearer 21AC126A436BC5148FB1FE8985555:5fbf0b924ca6e10587d8553f:5fc0b9b7ac2fda9cd5cf9729',
 			'Content-Type': 'application/x-www-form-urlencoded',
 			'Accept': 'application/json',
 		});
@@ -229,7 +228,6 @@ export class SessionService {
 		}
 
 		return new HttpHeaders({
-			'Authorization': 'Bearer 21AC126A436BC5148FB1FE8985555:5fbf0b924ca6e10587d8553f:5fc0b9b7ac2fda9cd5cf9729',
 			'Content-Type': 'application/x-www-form-urlencoded',
 			'Accept': 'application/json',
 		});
@@ -245,7 +243,6 @@ export class SessionService {
 		}
 
 		return new HttpHeaders({
-			'Authorization': 'Bearer 21AC126A436BC5148FB1FE8985555:5fbf0b924ca6e10587d8553f:5fc0b9b7ac2fda9cd5cf9729',
 			'Accept': 'application/json',
 		});
 	}
